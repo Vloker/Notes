@@ -6,6 +6,7 @@ import Arsip from "../card/Arsip";
 import Header from "../header/Header";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { getInitialData, showFormattedDate } from "../../utils";
 
 const validationSchema = Yup.object().shape({
   judul: Yup.string().required('Judul wajib diisi!'),
@@ -40,8 +41,8 @@ const handleClick = (values) => {
   const newCatatan = {
     id: Date.now(),
     title: values.judul,
-    date: new Date().toLocaleDateString(),
-    text: values.deskripsi
+    createdAt: new Date().toLocaleDateString(),
+    body: values.deskripsi
   };
   setCatatanData([...catatanData, newCatatan]);
   formik.resetForm();
@@ -100,6 +101,22 @@ useEffect(() => {
   }
 }, [searchTerm, catatanData, arsipData]);
 
+useEffect(() => {
+  // Inisialisasi data saat komponen dimuat
+  const initialData = getInitialData();
+  const catatan = [];
+  const arsip = [];
+  initialData.forEach(item => {
+    if (item.archived) {
+      arsip.push(item);
+    } else {
+      catatan.push(item);
+    }
+  });
+  setCatatanData(catatan);
+  setArsipData(arsip);
+}, []);
+
   return (
     <>
       <Header onSearch={setSearchTerm}/>
@@ -129,43 +146,47 @@ useEffect(() => {
             </form>
           </div>
 
-          <div className="flex w-3/4 flex-col gap-4 justify-start items-start">
+          <div className="flex w-5/6 flex-col gap-4 justify-start">
             <p className="text-xl">Catatan Aktif</p>
-            <div className="flex gap-4 justify-star items-start w-64">
-            {filteredCatatanData.length === 0 ? (
-                <span className="text-xl font-bold">Data tidak tersedia</span>
-              ) : (
-                filteredCatatanData.map((item) => (
-                  <Catatan 
-                    key={item.id}
-                    title={item.title}
-                    date={item.date}
-                    text={item.text}
-                    deleted={() => handleDelete(item.id)}
-                    archives={() => handleArsip(item.id)}
-                  />
-                ))
-              )}
+            <div className="flex gap-4 justify-start items-start w-full">
+              <div className="flex flex-wrap gap-2 justify-start items-start">
+              {filteredCatatanData.length === 0 ? (
+                  <span className="text-xl font-bold">Data tidak tersedia</span>
+                ) : (
+                  filteredCatatanData.map((item) => (
+                    <Catatan 
+                      key={item.id}
+                      title={item.title}
+                      date={item.createdAt}
+                      text={item.body}
+                      deleted={() => handleDelete(item.id)}
+                      archives={() => handleArsip(item.id)}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="flex w-3/4 flex-col gap-4 justify-start items-start">
+          <div className="flex w-5/6 flex-col gap-4 justify-start items-start">
             <p className="text-xl">Arsip</p>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
-            {filteredArsipData.length === 0 ? (
-                <span className="text-xl font-bold">Data tidak tersedia</span>
-              ) : (
-                filteredArsipData.map((item) => (
-                  <Arsip 
-                    key={item.id}
-                    title={item.title}
-                    date={item.date}
-                    text={item.text}
-                    deleted={() => handleDelete(item.id)}
-                    move={() => handlePindahkan(item.id)}
-                  />
-                ))
-              )}
+            <div className="flex gap-4 justify-start items-start w-full">
+              <div className="flex flex-wrap gap-2 justify-start items-start">
+              {filteredArsipData.length === 0 ? (
+                  <span className="text-xl font-bold">Data tidak tersedia</span>
+                ) : (
+                  filteredArsipData.map((item) => (
+                    <Arsip 
+                      key={item.id}
+                      title={item.title}
+                      date={item.createdAt}
+                      text={item.body}
+                      deleted={() => handleDelete(item.id)}
+                      move={() => handlePindahkan(item.id)}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
           
