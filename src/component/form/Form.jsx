@@ -146,7 +146,7 @@ useEffect(() => {
             </form>
           </div>
 
-          <div className="flex w-5/6 flex-col gap-4 justify-start">
+          <div className="flex w-5/6 flex-col gap-3 justify-start">
             <p className="text-xl">Catatan Aktif</p>
             <div className="flex gap-4 justify-start items-start w-full">
               <div className="flex flex-wrap gap-2 justify-start items-start">
@@ -168,7 +168,7 @@ useEffect(() => {
             </div>
           </div>
 
-          <div className="flex w-5/6 flex-col gap-4 justify-start items-start">
+          <div className="flex w-5/6 flex-col gap-3 justify-start items-start">
             <p className="text-xl">Arsip</p>
             <div className="flex gap-4 justify-start items-start w-full">
               <div className="flex flex-wrap gap-2 justify-start items-start">
